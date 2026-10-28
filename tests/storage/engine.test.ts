@@ -75,4 +75,48 @@ describe('Storage Engine (MemPalace / LLM Wiki)', () => {
     const emptyRes = storage.searchEntries('NonExistent');
     expect(emptyRes.length).toBe(0);
   });
+
+  it('prevents path traversal attacks in entry id', () => {
+    const storage = new StorageEngine(testDir);
+    const maliciousEntry: ShipLogEntry = {
+      id: '../../malicious',
+      date: '2026-10-28',
+      rawTranscript: 'hacked',
+      artifacts: {
+        portfolio: { title: 'Hack', techStack: [], impact: 'None' },
+        standup: { yesterday: '', today: '', blockers: '' },
+        decisionLog: [],
+      },
+      reasoningTrace: [],
+    };
+
+    expect(() => storage.saveEntry(maliciousEntry)).toThrow(/Invalid entry ID/);
+    expect(storage.getEntry('../../malicious')).toBeNull();
+  });
+
+  it('handles corrupted or non-array index.json gracefully', () => {
+    const storage = new StorageEngine(testDir);
+    // Write invalid JSON / non-array object into index.json
+    fs.writeFileSync(path.join(testDir, 'index.json'), '{"notAnArray": true}', 'utf-8');
+
+    expect(storage.getIndex()).toEqual([]);
+    expect(storage.searchEntries('anything')).toEqual([]);
+
+    // Should also safely save and recover
+    storage.saveEntry({
+      id: 'entry-recovered',
+      date: '2026-10-28',
+      rawTranscript: 'valid',
+      artifacts: {
+        portfolio: { title: 'Recovery Title', techStack: ['TypeScript'], impact: 'High' },
+        standup: { yesterday: '', today: '', blockers: '' },
+        decisionLog: [],
+      },
+      reasoningTrace: [],
+    });
+
+    const index = storage.getIndex();
+    expect(index.length).toBe(1);
+    expect(index[0].id).toBe('entry-recovered');
+  });
 });

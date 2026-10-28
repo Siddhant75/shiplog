@@ -6,11 +6,36 @@ describe('GitHub Read-Only Service (Pillar 4)', () => {
     vi.restoreAllMocks();
   });
 
-  it('parses repository owner and name correctly', () => {
+  it('parses repository owner and name correctly from various input formats', () => {
     const service = new GitHubService({ token: 'ghp_test' });
-    const { owner, repo } = service.parseRepo('vercel/next.js');
-    expect(owner).toBe('vercel');
-    expect(repo).toBe('next.js');
+    expect(service.parseRepo('vercel/next.js')).toEqual({ owner: 'vercel', repo: 'next.js' });
+    expect(service.parseRepo('https://github.com/facebook/react')).toEqual({ owner: 'facebook', repo: 'react' });
+    expect(service.parseRepo('https://github.com/owner/repo.git')).toEqual({ owner: 'owner', repo: 'repo' });
+    expect(service.parseRepo('owner/repo/')).toEqual({ owner: 'owner', repo: 'repo' });
+  });
+
+  it('handles null author in commits gracefully', async () => {
+    const mockCommits = [
+      {
+        sha: 'xyz987',
+        commit: {
+          message: 'chore: automated release',
+          author: null,
+          committer: { name: 'Bot', date: '2026-10-28T12:00:00Z' },
+        },
+        html_url: 'https://github.com/user/repo/commit/xyz987',
+      },
+    ];
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => mockCommits,
+    } as any);
+
+    const service = new GitHubService();
+    const commits = await service.fetchRecentCommits('user/repo');
+    expect(commits.length).toBe(1);
+    expect(commits[0].author).toBe('Bot');
   });
 
   it('throws helpful error for invalid repo format', () => {

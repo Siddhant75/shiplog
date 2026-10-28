@@ -22,7 +22,15 @@ export class GitHubService {
   }
 
   parseRepo(repoString: string): { owner: string; repo: string } {
-    const parts = repoString.trim().split('/');
+    if (!repoString || typeof repoString !== 'string') {
+      throw new Error('Invalid repository identifier. Expected format: owner/repo');
+    }
+    const clean = repoString
+      .trim()
+      .replace(/^https?:\/\/github\.com\//i, '')
+      .replace(/\/+$/, '')
+      .replace(/\.git$/i, '');
+    const parts = clean.split('/');
     if (parts.length !== 2 || !parts[0] || !parts[1]) {
       throw new Error('Invalid repository identifier. Expected format: owner/repo');
     }
@@ -52,10 +60,10 @@ export class GitHubService {
     const data = await res.json();
     return data.map((item: any) => ({
       sha: item.sha,
-      message: item.commit.message,
-      author: item.commit.author.name,
-      date: item.commit.author.date,
-      url: item.html_url,
+      message: item.commit?.message || '',
+      author: item.commit?.author?.name || item.commit?.committer?.name || item.author?.login || 'Unknown',
+      date: item.commit?.author?.date || item.commit?.committer?.date || '',
+      url: item.html_url || '',
     }));
   }
 

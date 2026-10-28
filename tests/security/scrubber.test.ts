@@ -2,11 +2,33 @@ import { describe, it, expect } from 'vitest';
 import { scrubSecrets, isSensitiveFile } from '@/lib/security/scrubber';
 
 describe('Secret Scrubber (Security Pillar 3)', () => {
-  it('masks GitHub Personal Access Tokens', () => {
-    const raw = 'const token = "ghp_1234567890abcdefghijklmnopqrstuv";';
-    const clean = scrubSecrets(raw);
-    expect(clean).toContain('[REDACTED_GITHUB_TOKEN]');
-    expect(clean).not.toContain('ghp_');
+  it('masks GitHub Personal Access Tokens and Fine-Grained PATs', () => {
+    const rawClassic = 'const token = "ghp_1234567890abcdefghijklmnopqrstuv";';
+    expect(scrubSecrets(rawClassic)).toContain('[REDACTED_GITHUB_TOKEN]');
+    expect(scrubSecrets(rawClassic)).not.toContain('ghp_');
+
+    const rawFineGrained = 'token: github_pat_11ANX1234567890abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    expect(scrubSecrets(rawFineGrained)).toContain('[REDACTED_GITHUB_TOKEN]');
+    expect(scrubSecrets(rawFineGrained)).not.toContain('github_pat_');
+  });
+
+  it('masks PEM private keys even when split across git diff minus lines', () => {
+    const diffPem = `
+@@ -10,6 +10,6 @@
+- -----BEGIN RSA PRIVATE KEY-----
+- MIIEowIBAAKCAQEA0Y12345...
+- -----END RSA PRIVATE KEY-----
++ // Removed private key
+`;
+    const clean = scrubSecrets(diffPem);
+    expect(clean).toContain('[REDACTED_PRIVATE_KEY]');
+    expect(clean).not.toContain('MIIEowIBAAKCAQEA0Y12345');
+  });
+
+  it('handles null, undefined, or empty inputs gracefully without throwing', () => {
+    expect(scrubSecrets(null as any)).toBe('');
+    expect(scrubSecrets(undefined as any)).toBe('');
+    expect(scrubSecrets('')).toBe('');
   });
 
   it('masks OpenAI/Anthropic API keys', () => {
@@ -28,6 +50,8 @@ describe('Secret Scrubber (Security Pillar 3)', () => {
     expect(isSensitiveFile('.env.production')).toBe(true);
     expect(isSensitiveFile('credentials.json')).toBe(true);
     expect(isSensitiveFile('id_rsa')).toBe(true);
+    expect(isSensitiveFile('id_ed25519')).toBe(true);
+    expect(isSensitiveFile('id_ed25519.pub')).toBe(true);
     expect(isSensitiveFile('src/auth/service.ts')).toBe(false);
   });
 });

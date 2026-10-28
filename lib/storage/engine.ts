@@ -40,6 +40,17 @@ export interface IndexItem {
   techStack: string[];
 }
 
+function sanitizeId(id: string): string {
+  if (!id || typeof id !== 'string') {
+    throw new Error('Invalid entry ID: ID must be a non-empty string');
+  }
+  const trimmed = id.trim();
+  if (!/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
+    throw new Error(`Invalid entry ID "${id}": only alphanumeric, hyphen, and underscore characters are allowed`);
+  }
+  return trimmed;
+}
+
 export class StorageEngine {
   private baseDir: string;
 
@@ -54,17 +65,18 @@ export class StorageEngine {
   }
 
   saveEntry(entry: ShipLogEntry): void {
+    const cleanId = sanitizeId(entry.id);
     this.ensureDirs();
     // 1. Verbatim raw storage (MemPalace pattern)
-    fs.writeFileSync(path.join(this.baseDir, 'raw', `${entry.id}.txt`), entry.rawTranscript, 'utf-8');
+    fs.writeFileSync(path.join(this.baseDir, 'raw', `${cleanId}.txt`), entry.rawTranscript, 'utf-8');
 
     // 2. Verified structured entry (LLM Wiki derived knowledge layer)
-    fs.writeFileSync(path.join(this.baseDir, 'entries', `${entry.id}.json`), JSON.stringify(entry, null, 2), 'utf-8');
+    fs.writeFileSync(path.join(this.baseDir, 'entries', `${cleanId}.json`), JSON.stringify(entry, null, 2), 'utf-8');
 
     // 3. Update living index
-    const index = this.getIndex().filter((item) => item.id !== entry.id);
+    const index = this.getIndex().filter((item) => item.id !== cleanId);
     index.unshift({
-      id: entry.id,
+      id: cleanId,
       date: entry.date,
       title: entry.artifacts.portfolio.title,
       techStack: entry.artifacts.portfolio.techStack,
@@ -76,16 +88,18 @@ export class StorageEngine {
     const indexPath = path.join(this.baseDir, 'index.json');
     if (!fs.existsSync(indexPath)) return [];
     try {
-      return JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+      const parsed = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+      return Array.isArray(parsed) ? parsed : [];
     } catch {
       return [];
     }
   }
 
   getEntry(id: string): ShipLogEntry | null {
-    const entryPath = path.join(this.baseDir, 'entries', `${id}.json`);
-    if (!fs.existsSync(entryPath)) return null;
     try {
+      const cleanId = sanitizeId(id);
+      const entryPath = path.join(this.baseDir, 'entries', `${cleanId}.json`);
+      if (!fs.existsSync(entryPath)) return null;
       return JSON.parse(fs.readFileSync(entryPath, 'utf-8'));
     } catch {
       return null;
@@ -93,11 +107,13 @@ export class StorageEngine {
   }
 
   searchEntries(query: string): IndexItem[] {
-    const q = query.toLowerCase().trim();
-    if (!q) return this.getIndex();
-    return this.getIndex().filter((item) =>
-      item.title.toLowerCase().includes(q) ||
-      item.techStack.some((tech) => tech.toLowerCase().includes(q))
-    );
+    const q = (query || '').toLowerCase().trim();
+    const index = this.getIndex();
+    if (!q) return index;
+    return index.filter((item) => {
+      const titleMatch = (item.title || '').toLowerCase().includes(q);
+      const techMatch = Array.isArray(item.techStack) && item.techStack.some((tech) => (tech || '').toLowerCase().includes(q));
+      return titleMatch || techMatch;
+    });
   }
 }
