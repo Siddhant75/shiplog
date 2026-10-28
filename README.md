@@ -11,7 +11,7 @@
 | :--- | :--- | :--- |
 | 🌐 **Live Demo** | [Launch Web App](https://shiplog-hackathon.vercel.app) *(Deploy / Preview)* | Interactive Next.js 14 Web UI with 1-Click Demo |
 | 🎬 **2-Minute Video Demo** | [Watch on YouTube](https://youtu.be/placeholder-demo) *(Demo Walkthrough)* | 120s walkthrough covering problem, voice, & verification |
-| 🎙️ **Wispr Usage Card** | [Wispr Flow Usage Card](#-how-wispr-flow-powers-the-no-hands-build) | Complete breakdown of voice-driven build workflow |
+| 🎙️ **Wispr Usage Card** | [Wispr Flow Usage Card](#wispr-flow-usage-card) | Complete breakdown of voice-driven build workflow |
 | 🧪 **Test Suite** | **64 / 64 Passing** across 9 test suites | 100% strict Test-Driven Development (TDD) coverage |
 | 🔒 **Security Guarantee** | **5-Pillar Zero-Persistence In-Memory** | Air-gapped Ollama + zero-storage proxy + secret scrubber |
 
@@ -49,9 +49,10 @@ ShipLog was not merely designed **for** voice; it was architected, programmed, a
 - **Zero-Friction Architectural Dictation**: Designing the 5-Pillar Security model, the MemPalace verbatim memory layout, and the anti-hallucination regex tech signatures was spoken aloud directly into the editor without context switching between thinking and typing.
 - **Native Wispr Flow UI Integration**: ShipLog features a dedicated `Wispr Flow Ready` interface indicator and respects universal keyboard shortcuts, allowing developers to speak directly into the app using their standard Wispr hotkey.
 
+<a id="wispr-flow-usage-card"></a>
 ### 📋 Wispr Flow Usage Card
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           WISPR FLOW USAGE CARD                              │
 │                WeMakeDevs & Wispr Flow Hackathon - Track 1                  │
@@ -81,13 +82,16 @@ flowchart TD
     B --> C["Step 2: Execute & Fetch Git Diffs"]
     C --> D["Step 3: Synthesize Artifacts (LLM)"]
     D --> E["Step 4: Verify & Anti-Hallucination Grounding"]
-    E --> F["Step 5: Deliver, Index & Render UI"]
     
     subgraph AntiHallucination["Anti-Hallucination Grounding"]
       E1["verifyTechStack vs File Extensions"]
       E2["verifyCommitCoverage vs Git History"]
     end
-    E --- AntiHallucination
+
+    E --> E1
+    E --> E2
+    E1 --> F["Step 5: Deliver, Index & Render UI"]
+    E2 --> F
 ```
 
 1. **Step 1: Plan**  
@@ -108,7 +112,7 @@ flowchart TD
 
 Traditional vector search databases frequently fail for chronological developer journals because vector embeddings blur time sequences and lose verbatim nuance. ShipLog adopts an open-source, dual-layer memory pattern:
 
-```
+```text
 data/
 ├── raw/                      # MemPalace: Verbatim raw speech transcripts
 │   ├── entry-1718001.txt
@@ -180,7 +184,7 @@ npm run test
 ```
 
 ### Test Suite Execution Output
-```
+```text
  ✓ tests/sanity.test.ts (1 test)
  ✓ tests/security/scrubber.test.ts (6 tests)
  ✓ tests/github/service.test.ts (5 tests)
@@ -199,7 +203,7 @@ npm run test
 
 ## 🏗️ Architecture & Technology Stack Breakdown
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                            Next.js 14 Web UI                                │
 │   VoiceInputArea (Wispr Flow)  │  ArtifactsView  │  SettingsModal (BYOK)   │

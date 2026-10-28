@@ -25,7 +25,7 @@ Before clicking record, ensure the following is configured:
 - **Visual:** Facecam center-screen or bottom right PIP over a split screen of a blank portfolio website and an empty morning Slack standup message.
 - **Audio Tone:** Relatable, energetic, pointing out a universal pain point.
 
-```
+```text
 [0:00 - 0:10] (Screen shows empty portfolio and blank Slack message)
 "Every single day, developers ship incredible features and solve complex architectural 
 problems. But by the end of the day, three things happen: our portfolios stay completely 
@@ -45,7 +45,7 @@ decision logs—completely hands-free."
 - **Visual:** Screen captures the ShipLog dashboard. The presenter holds the Wispr Flow hotkey. The "Wispr Flow Ready" indicator pulses as live speech streams into the textarea at lightning speed.
 - **Action:** Speak the real recap naturally into Wispr Flow, or demonstrate with the 1-Click Judge Demo button if doing a hybrid recording.
 
-```
+```text
 [0:25 - 0:45] (Hold Wispr Flow hotkey, speak naturally into the mic)
 "Watch this. I'm not touching my keyboard. I hold my Wispr Flow hotkey and talk through my day:
 
@@ -70,7 +70,7 @@ And fourth—the most critical part—it grounds the outputs against actual code
 ### Act 3: Grounded Verification & The 5-Pillar Security Deep Dive (1:15 - 1:45) — 30 Seconds
 - **Visual:** Click through the interactive tabs in `ArtifactsView`: Portfolio Card (showing green `ShieldCheck` verified badges), Standup Update, Decision Log with code evidence lines, and the Reasoning Trace tab. Then briefly show the Settings modal or terminal test run.
 
-```
+```text
 [1:15 - 1:30] (Highlighting Portfolio Card and green verified pills)
 "Notice these green verified shields? That's our anti-hallucination verification engine. 
 If an LLM claims 'Kubernetes' or 'Redis' when those files weren't touched in the diff, 
@@ -91,7 +91,7 @@ And five: DOMPurify XSS sanitization across all rendered outputs."
 ### Act 4: The Result, Wispr Usage Card, & Closing CTA (1:45 - 2:00) — 15 Seconds
 - **Visual:** Show the terminal running `npm run test` (64/64 tests passing), briefly highlight the Wispr Usage Card on the README, and display the GitHub repo and live demo URL.
 
-```
+```text
 [1:45 - 1:55] (Split view: Terminal showing 64/64 passing tests + Wispr Usage Card)
 "ShipLog is fully tested with 64 passing tests across 9 test suites. Built hands-free 
 with Wispr Flow, which accelerated our dev velocity by more than 3x."
