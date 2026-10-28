@@ -49,9 +49,17 @@ export function VoiceInputArea({
       {/* Transcript Textarea */}
       <div className="relative">
         <textarea
+          id="voice-transcript-input"
+          aria-label="Daily voice recap transcript"
           rows={5}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !isSubmitDisabled) {
+              e.preventDefault();
+              onSubmit();
+            }
+          }}
           placeholder="Hold your Wispr Flow hotkey and talk through your day: what you shipped, technical challenges solved, decisions made..."
           className="w-full rounded-xl bg-slate-950/90 border border-slate-800 p-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition resize-y font-normal"
         />
@@ -60,12 +68,13 @@ export function VoiceInputArea({
       {/* Controls */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
         <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
-          <span>Tip: Tap your Wispr Flow hotkey from anywhere to dictate.</span>
+          <span>Tip: Tap your Wispr Flow hotkey from anywhere to dictate. Press Ctrl+Enter to ship.</span>
         </div>
         <button
           type="button"
           onClick={onSubmit}
           disabled={isSubmitDisabled}
+          aria-label="Ship daily recap entry"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 disabled:opacity-50 disabled:pointer-events-none font-semibold text-xs text-white shadow-lg shadow-indigo-600/25 transition"
         >
           {isLoading ? (

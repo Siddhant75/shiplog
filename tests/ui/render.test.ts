@@ -122,6 +122,44 @@ describe('Artifact Data Contracts and Sanitization', () => {
     expect(sanitizedTitle).not.toContain('onerror');
     expect(sanitizedTitle).not.toContain('alert');
   });
+
+  it('safely handles edge case artifact payloads with missing optional fields', () => {
+    const minimalResult: ArtifactsResult = {
+      artifacts: {
+        portfolio: {
+          title: 'Minimal Entry',
+          techStack: [],
+          impact: 'Core improvements.',
+        },
+        standup: {
+          yesterday: '',
+          today: '',
+          blockers: '',
+        },
+        decisionLog: [],
+      },
+      reasoningTrace: [],
+      verification: {
+        verifiedTech: [],
+        hallucinatedTech: [],
+        commitCoverage: undefined,
+      },
+    };
+
+    expect(minimalResult.artifacts.portfolio.techStack).toHaveLength(0);
+    expect(minimalResult.artifacts.portfolio.challengeSolved).toBeUndefined();
+    expect(minimalResult.artifacts.decisionLog).toHaveLength(0);
+    expect(minimalResult.verification?.commitCoverage).toBeUndefined();
+    expect(minimalResult.verification?.commitCoverage?.covered).toBeUndefined();
+  });
+
+  it('handles non-string or nullish reasoning trace steps safely', () => {
+    const safeTraceStep = (step: any) => DOMPurify.sanitize(String(step ?? ''));
+    expect(safeTraceStep(null)).toBe('');
+    expect(safeTraceStep(undefined)).toBe('');
+    expect(safeTraceStep(12345)).toBe('12345');
+    expect(safeTraceStep('<b>Step verified</b>')).toBe('<b>Step verified</b>');
+  });
 });
 
 describe('Settings State Defaults and Model Selection Logic', () => {

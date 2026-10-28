@@ -122,6 +122,7 @@ export function SettingsModal({
       }}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="settings-modal-title"
     >
       <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 p-6 text-slate-100 shadow-2xl space-y-5">
         {/* Header */}
@@ -131,7 +132,7 @@ export function SettingsModal({
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">Security & Model Settings</h2>
+              <h2 id="settings-modal-title" className="text-base font-bold text-white tracking-tight">Security & Model Settings</h2>
               <p className="text-xs text-slate-400">Configure BYOK or 100% Air-Gapped Local Inference</p>
             </div>
           </div>
@@ -148,10 +149,14 @@ export function SettingsModal({
         <div className="space-y-4 text-sm">
           {/* Provider Selection */}
           <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label
+              htmlFor="model-provider-select"
+              className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5"
+            >
               <Server className="w-3.5 h-3.5 text-indigo-400" /> Model Provider
             </label>
             <select
+              id="model-provider-select"
               value={provider}
               onChange={(e) => setProvider(e.target.value as any)}
               className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3.5 py-2.5 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition"
@@ -170,11 +175,15 @@ export function SettingsModal({
           {/* Cloud Provider API Key */}
           {isCloudProvider(provider) && (
             <div className="rounded-xl border border-indigo-900/50 bg-indigo-950/20 p-3.5 space-y-2">
-              <label className="flex items-center gap-2 text-xs font-semibold text-indigo-300">
+              <label
+                htmlFor="api-key-input"
+                className="flex items-center gap-2 text-xs font-semibold text-indigo-300"
+              >
                 <Key className="w-3.5 h-3.5" /> API Key (Session-Only Memory)
               </label>
               <div className="relative">
                 <input
+                  id="api-key-input"
                   type="password"
                   placeholder={
                     provider === 'gemini'
@@ -199,10 +208,14 @@ export function SettingsModal({
           {provider === 'ollama' && (
             <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-950/50 p-3.5">
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1">
+                <label
+                  htmlFor="ollama-base-url"
+                  className="block text-xs font-medium text-slate-400 mb-1"
+                >
                   Custom Ollama Base URL (Optional)
                 </label>
                 <input
+                  id="ollama-base-url"
                   type="text"
                   placeholder="http://localhost:11434/v1 (default)"
                   value={baseUrl}
@@ -211,10 +224,14 @@ export function SettingsModal({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1">
+                <label
+                  htmlFor="ollama-model-name"
+                  className="block text-xs font-medium text-slate-400 mb-1"
+                >
                   Custom Model Name (Optional)
                 </label>
                 <input
+                  id="ollama-model-name"
                   type="text"
                   placeholder="llama3.2 (default)"
                   value={model}
@@ -227,10 +244,14 @@ export function SettingsModal({
 
           {/* GitHub PAT */}
           <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label
+              htmlFor="github-token-input"
+              className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5"
+            >
               <Key className="w-3.5 h-3.5 text-slate-400" /> GitHub Read-Only PAT (Optional)
             </label>
             <input
+              id="github-token-input"
               type="password"
               placeholder="ghp_... (for private repos & commit verification)"
               value={githubToken}

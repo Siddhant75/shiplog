@@ -89,8 +89,12 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex flex-wrap border-b border-slate-800 pb-2 gap-1.5">
+      <div role="tablist" aria-label="Recap artifact views" className="flex flex-wrap border-b border-slate-800 pb-2 gap-1.5">
         <button
+          id="tab-portfolio"
+          role="tab"
+          aria-selected={activeTab === 'portfolio'}
+          aria-controls="panel-portfolio"
           type="button"
           onClick={() => setActiveTab('portfolio')}
           className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
@@ -104,6 +108,10 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
         </button>
 
         <button
+          id="tab-standup"
+          role="tab"
+          aria-selected={activeTab === 'standup'}
+          aria-controls="panel-standup"
           type="button"
           onClick={() => setActiveTab('standup')}
           className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
@@ -117,6 +125,10 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
         </button>
 
         <button
+          id="tab-decisions"
+          role="tab"
+          aria-selected={activeTab === 'decisions'}
+          aria-controls="panel-decisions"
           type="button"
           onClick={() => setActiveTab('decisions')}
           className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
@@ -130,6 +142,10 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
         </button>
 
         <button
+          id="tab-trace"
+          role="tab"
+          aria-selected={activeTab === 'trace'}
+          aria-controls="panel-trace"
           type="button"
           onClick={() => setActiveTab('trace')}
           className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
@@ -147,7 +163,7 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
       <div className="text-sm">
         {/* Portfolio Card Tab */}
         {activeTab === 'portfolio' && (
-          <div className="space-y-4">
+          <div id="panel-portfolio" role="tabpanel" aria-labelledby="tab-portfolio" className="space-y-4">
             <div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400">Project Contribution</span>
               <h3 className="text-lg font-bold text-white tracking-tight mt-0.5">
@@ -199,7 +215,7 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
 
         {/* Standup Update Tab */}
         {activeTab === 'standup' && (
-          <div className="space-y-3.5">
+          <div id="panel-standup" role="tabpanel" aria-labelledby="tab-standup" className="space-y-3.5">
             <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -224,7 +240,7 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
               <p className="text-sm text-slate-200 pl-6 leading-relaxed">{standup.blockers || 'None.'}</p>
             </div>
 
-            {verification?.commitCoverage && verification.commitCoverage.covered.length > 0 && (
+            {verification?.commitCoverage?.covered && verification.commitCoverage.covered.length > 0 && (
               <div className="pt-2 text-xs text-slate-400 font-mono">
                 ✓ Cross-referenced against {verification.commitCoverage.covered.length} commit message(s)
               </div>
@@ -234,7 +250,7 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
 
         {/* Decision Log Tab */}
         {activeTab === 'decisions' && (
-          <div className="space-y-3">
+          <div id="panel-decisions" role="tabpanel" aria-labelledby="tab-decisions" className="space-y-3">
             {decisionLog.length === 0 ? (
               <p className="text-xs text-slate-500 italic p-4 text-center">No explicit decisions logged in this recap.</p>
             ) : (
@@ -269,7 +285,7 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
 
         {/* Reasoning Trace Tab with DOMPurify */}
         {activeTab === 'trace' && (
-          <div className="space-y-2.5">
+          <div id="panel-trace" role="tabpanel" aria-labelledby="tab-trace" className="space-y-2.5">
             <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
               <span>5-Step Autonomous Agent Execution Chain</span>
               <span className="text-[11px] text-emerald-400 font-mono">DOMPurify Active</span>
@@ -283,7 +299,7 @@ export function ArtifactsView({ result }: ArtifactsViewProps) {
                   <span
                     className="flex-1"
                     dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(step),
+                      __html: DOMPurify.sanitize(String(step ?? '')),
                     }}
                   />
                 </div>

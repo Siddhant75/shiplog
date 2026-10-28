@@ -21,6 +21,8 @@ export function SampleDataButton({
       type="button"
       onClick={onLoadSample}
       disabled={disabled || isLoading}
+      aria-busy={isLoading}
+      aria-label="Load verified sample recap scenario"
       className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-amber-300 text-xs font-semibold shadow-sm transition group"
       title="Run verified sample recap without requiring cloud API keys or local LLM setup"
     >

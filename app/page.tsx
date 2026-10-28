@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Terminal, Settings, AlertCircle, X, Shield, Sparkles } from 'lucide-react';
+import { Terminal, Settings, AlertCircle, X, Shield } from 'lucide-react';
 import { VoiceInputArea } from '@/components/VoiceInputArea';
 import { SettingsModal, SettingsState, DEFAULT_SETTINGS } from '@/components/SettingsModal';
 import { SampleDataButton, SAMPLE_VOICE_TRANSCRIPT } from '@/components/SampleDataButton';
