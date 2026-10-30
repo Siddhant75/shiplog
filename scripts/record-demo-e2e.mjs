@@ -38,7 +38,7 @@ function waitForServer(url, timeoutMs = 35000) {
 
 async function run() {
   console.log('===========================================================');
-  console.log('🚀 ShipLog: Automated E2E Test & Demo Video/Asset Studio');
+  console.log('🚀 ShipLog: Automated E2E Test & Demo Studio (v2 Overhaul)');
   console.log('===========================================================');
 
   if (!fs.existsSync(DEMO_DIR)) {
@@ -75,6 +75,19 @@ async function run() {
   await waitForServer(BASE_URL, 40000);
   console.log(`✅ Next.js is online at ${BASE_URL}`);
 
+  // Pre-warm API route so Next.js compiles it before the browser tour begins
+  console.log('🔥 Pre-warming /api/agent/run to compile route...');
+  try {
+    const warmupRes = await fetch(`${BASE_URL}/api/agent/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ voiceTranscript: 'warmup', isMockSample: true }),
+    });
+    console.log(`⚡ /api/agent/run pre-warmed! Status: ${warmupRes.status}`);
+  } catch (err) {
+    console.log('   Warmup note:', err.message);
+  }
+
   // 2. Detect Available Browser
   const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
   const edgePath = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
@@ -108,80 +121,146 @@ async function run() {
 
   page.on('console', (msg) => console.log('   [Browser Console]', msg.type(), msg.text()));
   page.on('pageerror', (err) => console.error('   [Browser PageError]', err.message));
-  page.on('response', (res) => {
-    if (res.url().includes('/api/')) {
-      console.log(`   [API Response] ${res.status()} ${res.url()}`);
-    }
-  });
+  page.on('response', (res) => console.log('   [Network Response]', res.status(), res.url()));
 
   try {
-    console.log(`\n📡 [Step 1] Loading ShipLog Dashboard at ${BASE_URL}...`);
+    // -------------------------------------------------------------
+    // SCENE 1: HERO LANDING & WISPR PULSE WAVEFORM
+    // -------------------------------------------------------------
+    console.log(`\n📡 [Scene 1] Loading ShipLog at ${BASE_URL}...`);
     await page.goto(BASE_URL, { waitUntil: 'networkidle' });
 
-    // 1. Hero Landing View
-    console.log('📸 [Asset 1/7] Capturing Hero Landing View...');
+    console.log('📸 [Asset 1/9] Hero Landing View...');
     await page.waitForSelector('h1:has-text("ShipLog")');
-    await page.waitForTimeout(2000);
-    await page.screenshot({ path: path.join(DEMO_DIR, '01-hero-landing.png'), fullPage: false });
+    await page.waitForTimeout(1500);
 
-    // 2. Click 1-Click Judge Demo Scenario
-    console.log('\n⚡ [Step 2] Triggering 1-Click Judge Demo (Sample Scenario)...');
+    // Focus voice textarea to trigger Wispr Pulse waveform
+    const voiceInput = page.locator('#voice-transcript-input');
+    await voiceInput.focus();
+    await page.waitForTimeout(1000);
+    await page.screenshot({ path: path.join(DEMO_DIR, '01-hero-landing.png') });
+
+    // -------------------------------------------------------------
+    // SCENE 2: 1-CLICK JUDGE DEMO & REAL-TIME AGENT STEPPER HUD
+    // -------------------------------------------------------------
+    console.log('\n⚡ [Scene 2] Triggering 1-Click Judge Demo (Sample Scenario)...');
     const sampleBtn = page.locator('button:has-text("Try Sample Scenario")');
     await sampleBtn.click();
 
-    await page.waitForTimeout(1200);
-    console.log('📸 [Asset 2/7] Capturing Voice Input Prompt State...');
-    await page.screenshot({ path: path.join(DEMO_DIR, '02-voice-prompt-loaded.png') });
+    console.log('📸 [Asset 2/9] Capturing Real-Time Agent Stepper HUD...');
+    await page.waitForSelector('h3:has-text("Autonomous Agent Execution Pipeline")', { timeout: 10000 });
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: path.join(DEMO_DIR, '02-agent-execution-hud.png') });
 
-    // 3. Wait for Artifacts View to Render
-    console.log('\n⏳ [Step 3] Waiting for Autonomous Agent Loop & Verification...');
-    await page.waitForSelector('#tab-portfolio', { timeout: 25000 });
+    // -------------------------------------------------------------
+    // SCENE 3: VERIFIED DELIVERABLES & DIFF GROUNDING PROOF
+    // -------------------------------------------------------------
+    console.log('\n⏳ [Scene 3] Waiting for Verified Artifacts View...');
+    await page.waitForSelector('#tab-portfolio', { timeout: 45000 });
     await page.waitForSelector('h3:has-text("Resilient WebSocket Reconnection Layer")', { timeout: 10000 });
+    await page.waitForTimeout(1500);
 
-    console.log('📸 [Asset 3/7] Capturing Verified Portfolio Card (with ShieldCheck pills)...');
-    await page.waitForTimeout(2500);
+    console.log('📸 [Asset 3/9] Verified Portfolio Card & Anti-Hallucination Tag...');
     await page.screenshot({ path: path.join(DEMO_DIR, '03-portfolio-verified-tags.png') });
 
-    // 4. Standup Update Tab
-    console.log('\n📋 [Step 4] Switching to Standup Update Tab...');
+    // Click verified tech tag to open DiffInspectorModal
+    console.log('\n🔍 [Scene 3b] Opening Git Diff Verification Proof Popover...');
+    const wsPill = page.locator('button:has-text("WebSockets")').first();
+    await wsPill.click();
+    await page.waitForSelector('h3:has-text("Git Diff Verification Proof")');
+    await page.waitForTimeout(1500);
+
+    console.log('📸 [Asset 4/9] Interactive Git Diff Proof Modal...');
+    await page.screenshot({ path: path.join(DEMO_DIR, '04-diff-inspector-proof.png') });
+
+    // Close diff modal with Escape
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(800);
+
+    // Switch to Standup Tab & Click Copy for Slack
+    console.log('\n📋 [Scene 3c] Switching to Standup Update Tab & Copying for Slack...');
     const standupTab = page.locator('#tab-standup');
     await standupTab.click();
-    await page.waitForTimeout(1000);
-    console.log('📸 [Asset 4/7] Capturing Standup Update Deliverable...');
-    await page.screenshot({ path: path.join(DEMO_DIR, '04-standup-update.png') });
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(800);
 
-    // 5. Decision Log Tab
-    console.log('\n🏛️ [Step 5] Switching to Architectural Decision Log Tab...');
-    const decisionsTab = page.locator('#tab-decisions');
-    await decisionsTab.click();
-    await page.waitForTimeout(1000);
-    console.log('📸 [Asset 5/7] Capturing Decision Log with Monospace Code Evidence...');
-    await page.screenshot({ path: path.join(DEMO_DIR, '05-decision-log-evidence.png') });
-    await page.waitForTimeout(2000);
+    const copySlackBtn = page.locator('button:has-text("Copy for Slack")');
+    await copySlackBtn.click();
+    await page.waitForSelector('div[role="status"]:has-text("Copied Slack Standup")');
+    await page.waitForTimeout(1200);
 
-    // 6. Reasoning Trace Tab (DOMPurify Sanitized)
-    console.log('\n🔍 [Step 6] Switching to 5-Step Agent Reasoning Trace Tab...');
-    const traceTab = page.locator('#tab-trace');
-    await traceTab.click();
-    await page.waitForTimeout(1000);
-    console.log('📸 [Asset 6/7] Capturing DOMPurify-Protected Reasoning Trace...');
-    await page.screenshot({ path: path.join(DEMO_DIR, '06-reasoning-trace-dompurify.png') });
-    await page.waitForTimeout(2000);
+    console.log('📸 [Asset 5/9] Standup Tab with Slack Copy Toast...');
+    await page.screenshot({ path: path.join(DEMO_DIR, '05-standup-slack-copy.png') });
 
-    // 7. Security Settings Modal (Zero-Persistence & Local Ollama)
-    console.log('\n⚙️ [Step 7] Opening Security & Model Settings Modal...');
+    // -------------------------------------------------------------
+    // SCENE 4: LIVING DEVELOPER PORTFOLIO (LIFETIME BRAG SHEET)
+    // -------------------------------------------------------------
+    console.log('\n🌐 [Scene 4] Navigating to Living Developer Portfolio...');
+    const portfolioNav = page.locator('button:has-text("Living Portfolio")');
+    await portfolioNav.click();
+    await page.waitForSelector('h2:has-text("Living Developer Portfolio")');
+    await page.waitForTimeout(1200);
+
+    // Click WebSockets filter chip
+    const wsFilter = page.locator('button:has-text("WebSockets")').first();
+    await wsFilter.click();
+    await page.waitForTimeout(800);
+
+    // Click Share Portfolio button
+    const shareBtn = page.locator('button:has-text("Share Portfolio")');
+    await shareBtn.click();
+    await page.waitForTimeout(1200);
+
+    console.log('📸 [Asset 6/9] Living Developer Portfolio Gallery...');
+    await page.screenshot({ path: path.join(DEMO_DIR, '06-living-portfolio-gallery.png') });
+
+    // -------------------------------------------------------------
+    // SCENE 5: ENGINEERING WIKI VAULT (LLM WIKI PATTERN)
+    // -------------------------------------------------------------
+    console.log('\n🧠 [Scene 5] Navigating to Engineering Wiki Vault...');
+    const wikiNav = page.locator('button:has-text("Wiki Vault")');
+    await wikiNav.click();
+    await page.waitForSelector('h2:has-text("Engineering Wiki Vault")');
+    await page.waitForTimeout(1200);
+
+    // Click Security topic hub
+    const secHub = page.locator('button:has-text("[[Security & Zero-Persistence]]")');
+    await secHub.click();
+    await page.waitForTimeout(1200);
+
+    console.log('📸 [Asset 7/9] Engineering Wiki Vault & Topic Hubs...');
+    await page.screenshot({ path: path.join(DEMO_DIR, '07-wiki-vault-hubs.png') });
+
+    // -------------------------------------------------------------
+    // SCENE 6: RESUME SYNC SUB-AGENT (GOOGLE XYZ BULLETS)
+    // -------------------------------------------------------------
+    console.log('\n📄 [Scene 6] Navigating to Resume Sync Sub-Agent...');
+    const resumeNav = page.locator('button:has-text("Resume Sync")');
+    await resumeNav.click();
+    await page.waitForSelector('h2:has-text("Resume Sync Sub-Agent")');
+    await page.waitForTimeout(1200);
+
+    // Click Copy Bullets
+    const copyBulletsBtn = page.locator('button:has-text("Copy Bullets")');
+    await copyBulletsBtn.click();
+    await page.waitForTimeout(1200);
+
+    console.log('📸 [Asset 8/9] Resume Sync with ATS 94 Score & Google XYZ Bullets...');
+    await page.screenshot({ path: path.join(DEMO_DIR, '08-resume-sync-ats.png') });
+
+    // -------------------------------------------------------------
+    // SCENE 7: SECURITY & MODEL SETTINGS MODAL
+    // -------------------------------------------------------------
+    console.log('\n⚙️ [Scene 7] Opening 5-Pillar Security & Settings Modal...');
     const settingsBtn = page.locator('button[title="Configure Model & Security Settings"]');
     await settingsBtn.click();
     await page.waitForSelector('h2:has-text("Security & Model Settings")');
-    await page.waitForTimeout(1200);
-    console.log('📸 [Asset 7/7] Capturing 5-Pillar Security Settings Modal...');
-    await page.screenshot({ path: path.join(DEMO_DIR, '07-security-settings-modal.png') });
-    await page.waitForTimeout(2500);
-
-    // Close modal with Escape key
-    await page.keyboard.press('Escape');
     await page.waitForTimeout(1500);
+
+    console.log('📸 [Asset 9/9] 5-Pillar Security Settings Modal...');
+    await page.screenshot({ path: path.join(DEMO_DIR, '09-security-settings-modal.png') });
+
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(1000);
 
     // Retrieve video path before context closes
     const video = page.video();

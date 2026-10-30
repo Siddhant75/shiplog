@@ -37,6 +37,9 @@ next-env.d.ts
 /data/
 
 # internal hackathon scripts & assets
+docs/plans/
+*PLAN*
+docs/*PLAN*
 docs/*DEMO_SCRIPT*
 *DEMO_SCRIPT*
 docs/DEMO_SCRIPT.md

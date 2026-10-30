@@ -1,6 +1,7 @@
 'use client';
-import React from 'react';
-import { Mic, Loader2, ArrowRight, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mic, Loader2, ArrowRight } from 'lucide-react';
+import { WisprPulse } from './WisprPulse';
 
 export interface VoiceInputAreaProps {
   value: string;
@@ -17,12 +18,13 @@ export function VoiceInputArea({
   isLoading,
   disabled = false,
 }: VoiceInputAreaProps) {
+  const [isFocused, setIsFocused] = useState(false);
   const isSubmitDisabled = isLoading || disabled || !value.trim();
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl backdrop-blur-sm space-y-3.5">
       {/* Header bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="relative flex items-center justify-center p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
             <Mic className="w-4 h-4 animate-pulse" />
@@ -33,17 +35,14 @@ export function VoiceInputArea({
           </div>
           <div>
             <h2 className="text-sm font-bold text-slate-200">Daily Voice Recap</h2>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 font-medium">
-                <Sparkles className="w-2.5 h-2.5 text-indigo-400" />
-                Wispr Flow Ready
-              </span>
-            </div>
+            <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+              Hands-Free End-of-Day Engineering Debrief
+            </p>
           </div>
         </div>
-        <span className="text-xs text-slate-400 hidden sm:inline">
-          Speak using Wispr hotkey or type
-        </span>
+
+        {/* Wispr Pulse Waveform Indicator */}
+        <WisprPulse isListening={isFocused || Boolean(value.trim())} />
       </div>
 
       {/* Transcript Textarea */}
@@ -53,6 +52,8 @@ export function VoiceInputArea({
           aria-label="Daily voice recap transcript"
           rows={5}
           value={value}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !isSubmitDisabled) {
