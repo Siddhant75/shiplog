@@ -33,8 +33,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# local data store
+/data/
+
 # internal hackathon scripts & assets
 docs/*DEMO_SCRIPT*
 *DEMO_SCRIPT*
 docs/DEMO_SCRIPT.md
-
+demo-assets/
+*.webm

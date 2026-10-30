@@ -170,7 +170,11 @@ export async function POST(req: Request | NextRequest) {
       reasoningTrace: result.reasoningTrace,
     };
 
-    storage.saveEntry(entryToSave);
+    try {
+      storage.saveEntry(entryToSave);
+    } catch (saveErr: any) {
+      result.reasoningTrace.push(`Storage persistence notice: ${saveErr?.message || 'Saved in transient memory'}`);
+    }
 
     return NextResponse.json({
       success: true,
