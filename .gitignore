@@ -32,3 +32,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# internal hackathon scripts & assets
+docs/*DEMO_SCRIPT*
+*DEMO_SCRIPT*
+docs/DEMO_SCRIPT.md
+
