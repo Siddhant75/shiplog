@@ -3,7 +3,7 @@
 > **ShipLog: Autonomous Dev Memory & Career Engine**  
 > *Track 1: Builders — WeMakeDevs & Wispr Flow Hackathon*
 
-This document serves as the operational specification for autonomous coding agents (Claude Code, Cursor, Antigravity, Devin, Copilot Workspace) interacting with this repository, as well as the technical architectural specification of ShipLog's internal multi-agent runtime.
+This document serves as the operational specification for autonomous coding agents (Claude Code, Cursor, Antigravity, Devin, Copilot Workspace) interacting with this public repository, as well as the technical architectural specification of ShipLog's internal multi-agent runtime.
 
 ---
 
@@ -25,14 +25,13 @@ npx vitest run tests/ui/portfolio-view.test.tsx
 
 # 4. Static TypeScript Typecheck (Must exit with code 0)
 npx tsc --noEmit
-
-# 5. Automated Headless Browser Demo Tour (Playwright Chromium)
-node scripts/record-demo-e2e.mjs
 ```
 
 ---
 
 ## 🏛️ 2. Repository Structure & Map
+
+Every path listed below reflects the clean public repository on `main`:
 
 ```text
 .
@@ -71,8 +70,6 @@ node scripts/record-demo-e2e.mjs
 │   ├── security/scrubber.ts        # Pre-flight secret scrubber & sensitive file filter
 │   ├── storage/engine.ts           # MemPalace + LLM Wiki local storage engine
 │   └── wiki/data.ts                # Engineering wiki topic hubs & ADR catalog
-├── scripts/
-│   └── record-demo-e2e.mjs         # Headless browser demo recording automation
 └── tests/                          # 20 automated Vitest test suites (96 tests)
 ```
 
@@ -162,10 +159,10 @@ Any agent contributing to this repository must uphold these non-negotiable rules
 
 ## 🧪 5. Testing & Verification Protocols
 
-ShipLog enforces strict Test-Driven Development (TDD). 
+ShipLog enforces strict Test-Driven Development (TDD).
 
 ### Golden Rules for Coding Agents
-- **No Test Regressions**: All 20 test suites (96 tests) must pass at 100% before any branch merge or task completion.
+- **No Test Regressions**: All 20 test suites (96 tests) must pass at 100% before any branch merge or PR creation.
 - **Type Safety**: `npx tsc --noEmit` must return exit code 0 with zero type warnings or `any` compromises.
 - **Unit Test Coverage**: If you introduce a new feature, component, or utility function, you **must write a corresponding unit test** in `tests/`:
   - API routes $\rightarrow$ `tests/api/`
@@ -175,35 +172,26 @@ ShipLog enforces strict Test-Driven Development (TDD).
 
 ---
 
-## 🚫 6. Git & File Hygiene Guidelines
+## 🎨 6. Code Style & Architecture Guidelines
 
-The following files and patterns are strictly excluded from the public git tree via `.gitignore`:
-
-| Pattern | Description |
-| :--- | :--- |
-| `demo-assets/` | Video recordings, audio wav files, screenshots |
-| `*.webm`, `*.mp4`, `*.wav`, `*.bin`, `*.onnx` | Media binaries and ML weights |
-| `docs/plans/` | Internal hackathon planning files and scratchpads |
-| `docs/DEMO_SCRIPT.md` | Internal demo narration script |
-| `data/` | Local runtime data (`data/raw/`, `data/entries/`, `data/index.json`) |
-| `scripts/generate_voiceover.py` | Local TTS audio synthesis script |
-| `.env*`, `*.pem` | Local environment variables and private certificates |
-
-Before staging files, always run:
-```bash
-git status -uall
-```
-Verify that no temporary scratch files, media binaries, or plan artifacts are staged.
+- **Framework**: Next.js 14 App Router with React Server Components by default. Interactive dashboard components must be marked `'use client'`.
+- **Styling**: Tailwind CSS with dark-mode developer aesthetic (`bg-neutral-900`, `text-neutral-100`, `border-neutral-800`).
+- **Icons**: Lucide React for consistent iconography.
+- **Component Isolation**: Reusable modal drawers (`CaseStudyModal.tsx`, `DiffInspectorModal.tsx`) and views (`PortfolioView.tsx`, `WikiVaultView.tsx`, `ResumeSyncView.tsx`) reside in `components/`.
 
 ---
 
-## 📝 7. Conventional Commit Standard
+## 📝 7. Conventional Commit & Contribution Standard
 
-Follow Sentry-style conventional commits:
+Follow conventional commits for all pull requests:
 - `feat(<scope>): <Subject>` for new features
 - `fix(<scope>): <Subject>` for bug fixes
 - `docs(<scope>): <Subject>` for documentation updates
 - `test(<scope>): <Subject>` for test additions or corrections
 - `ref(<scope>): <Subject>` for refactoring without behavior change
 
-Maintain branch synchronization: develop on `feat/shiplog-core` and fast-forward merge into `main`.
+When opening a Pull Request:
+1. Create a feature branch: `git checkout -b feat/your-feature-name`
+2. Ensure all tests and type checks pass: `npm run test && npx tsc --noEmit`
+3. Commit with a concise conventional commit message
+4. Push and open a PR against `main`
