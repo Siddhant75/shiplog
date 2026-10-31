@@ -233,8 +233,8 @@ data/
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/Siddhant75/NoHands-hackathon.git
-cd NoHands-hackathon
+git clone https://github.com/Siddhant75/shiplog.git
+cd shiplog
 npm install
 ```
 
