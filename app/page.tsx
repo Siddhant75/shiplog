@@ -18,6 +18,7 @@ import { SampleDataButton, SAMPLE_VOICE_TRANSCRIPT } from '@/components/SampleDa
 import { ArtifactsView, ArtifactsResult } from '@/components/ArtifactsView';
 import { AgentExecutionHUD } from '@/components/AgentExecutionHUD';
 import { DiffInspectorModal } from '@/components/DiffInspectorModal';
+import { CaseStudyModal } from '@/components/CaseStudyModal';
 import { Toast } from '@/components/Toast';
 import { PortfolioView } from '@/components/PortfolioView';
 import { WikiVaultView } from '@/components/WikiVaultView';
@@ -63,6 +64,9 @@ export default function HomePage() {
     techName: '',
     isVerified: true,
   });
+
+  // Case Study drawer modal state
+  const [caseStudyShip, setCaseStudyShip] = useState<PortfolioShipItem | null>(null);
 
   const handleOpenDiff = (
     techName: string,
@@ -192,7 +196,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center">
-      <main className="w-full max-w-4xl px-4 py-6 sm:px-6 sm:py-8 space-y-6">
+      <main className="w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 space-y-6">
         {/* Header Bar */}
         <header className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800/80 gap-4">
           <div>
@@ -234,10 +238,10 @@ export default function HomePage() {
           </div>
         </header>
 
-        {/* 4-View Top Navigation Bar */}
+        {/* Global Navigation Tabs */}
         <nav
-          aria-label="ShipLog Core Views"
-          className="flex items-center justify-start sm:justify-center overflow-x-auto gap-2 p-1.5 rounded-2xl bg-slate-900/90 border border-slate-800/80 shadow-lg"
+          aria-label="ShipLog View Switcher"
+          className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-900/80 border border-slate-800 overflow-x-auto"
         >
           <button
             type="button"
@@ -296,7 +300,7 @@ export default function HomePage() {
             <FileText className="w-4 h-4" />
             <span>Resume Sync</span>
             <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300 font-mono">
-              ATS 94
+              ATS 95
             </span>
           </button>
         </nav>
@@ -325,7 +329,7 @@ export default function HomePage() {
 
         {/* VIEW 1: DAILY SHIP STATION */}
         {activeNav === 'station' && (
-          <div className="space-y-6 animate-in fade-in duration-150">
+          <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-150">
             {/* Voice Input Section with Wispr Pulse */}
             <VoiceInputArea
               value={voiceText}
@@ -351,6 +355,7 @@ export default function HomePage() {
           <PortfolioView
             ships={ships}
             onInspectDiff={handleOpenDiff}
+            onOpenCaseStudy={(ship) => setCaseStudyShip(ship)}
             onToast={(msg) => setToastMessage(msg)}
           />
         )}
@@ -379,6 +384,14 @@ export default function HomePage() {
           evidence={diffModal.evidence}
           rawDiffSnippet={diffModal.rawDiffSnippet}
           unverifiedReason={diffModal.unverifiedReason}
+        />
+
+        {/* Deep Dive Case Study Modal */}
+        <CaseStudyModal
+          isOpen={!!caseStudyShip}
+          onClose={() => setCaseStudyShip(null)}
+          ship={caseStudyShip}
+          onToast={(msg) => setToastMessage(msg)}
         />
 
         {/* Toast System */}

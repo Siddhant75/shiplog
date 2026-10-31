@@ -9,9 +9,10 @@ describe('PortfolioView Component', () => {
     const html = renderToString(<PortfolioView ships={HISTORICAL_SHIPS} />);
 
     expect(html).toContain('Living Developer Portfolio');
-    expect(html).toContain('Verified Ships');
-    expect(html).toContain('Code Grounded');
+    expect(html).toContain('Verification Telemetry');
+    expect(html).toContain('Git Grounded');
     expect(html).toContain('Share Portfolio');
+    expect(html).toContain('Core Stack Radar');
   });
 
   it('renders tech filter chips and search bar', () => {
