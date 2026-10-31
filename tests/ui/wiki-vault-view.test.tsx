@@ -9,7 +9,7 @@ describe('WikiVaultView Component', () => {
     const html = renderToString(<WikiVaultView topicHubs={WIKI_TOPIC_HUBS} />);
 
     expect(html).toContain('Engineering Wiki Vault');
-    expect(html).toContain('LLM Wiki');
+    expect(html).toContain('Living Knowledge Graph');
     expect(html).toContain('[[Networking &amp; Real-Time]]');
     expect(html).toContain('[[Security &amp; Zero-Persistence]]');
   });

@@ -84,7 +84,7 @@ describe('End-to-End ShipLog Pipeline Integration', () => {
     expect(sanitizedVoice).toContain('[REDACTED_API_KEY]');
     expect(sanitizedVoice).toContain('[REDACTED_GITHUB_TOKEN]');
 
-    // 5. Ingest into Storage Engine (MemPalace / LLM Wiki)
+    // 5. Ingest into Storage Engine (Dual-Tier Memory)
     const storage = new StorageEngine(testStorageDir);
     const entryId = 'shiplog-2026-10-28';
     const entryToSave: ShipLogEntry = {
@@ -98,14 +98,14 @@ describe('End-to-End ShipLog Pipeline Integration', () => {
 
     storage.saveEntry(entryToSave);
 
-    // 6. Verify Verbatim Raw Persistence (MemPalace)
+    // 6. Verify Verbatim Raw Persistence (Voice Vault)
     const rawFile = path.join(testStorageDir, 'raw', `${entryId}.txt`);
     expect(fs.existsSync(rawFile)).toBe(true);
     const rawSaved = fs.readFileSync(rawFile, 'utf-8');
     expect(rawSaved).toBe(sanitizedVoice);
     expect(rawSaved).not.toContain('sk-proj-');
 
-    // 7. Verify Structured JSON Entry (LLM Wiki Derived Layer)
+    // 7. Verify Structured JSON Entry (Structured Knowledge Layer)
     const savedEntry = storage.getEntry(entryId);
     expect(savedEntry).not.toBeNull();
     expect(savedEntry?.artifacts.portfolio.techStack).toContain('Redis');

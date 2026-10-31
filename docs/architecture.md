@@ -35,8 +35,8 @@ flowchart TD
 
     subgraph SubAgents["Specialized Sub-Agents & Knowledge Tiers"]
         RESUME_AGENT["📄 Resume Synthesizer (Google XYZ + ATS 95 + Julia Evans)"]
-        WIKI_TIER["📚 LLM Wiki Topic Compiler (Bi-directional Links)"]
-        MEM_PALACE["🎙️ MemPalace Immutable Verbatim Voice Vault"]
+        WIKI_TIER["📚 Wiki Knowledge Compiler (Bi-directional Links)"]
+        VOICE_VAULT["🎙️ Immutable Verbatim Voice Vault"]
     end
 
     V --> SCRUB
@@ -46,10 +46,10 @@ flowchart TD
     LLM --> GROUND
     GROUND --> RESUME_AGENT
     GROUND --> WIKI_TIER
-    GROUND --> MEM_PALACE
+    GROUND --> VOICE_VAULT
     RESUME_AGENT --> V4
     WIKI_TIER --> V3
-    MEM_PALACE --> V3
+    VOICE_VAULT --> V3
     GROUND --> V2
     GROUND --> V1
 ```
@@ -141,7 +141,7 @@ Clicking any project opens a slide-over architectural drawer containing:
 
 ### C. Engineering Wiki Vault (Obsidian Split-Pane)
 - **Left Column (4 Cols):** Topic knowledge nodes (`[[Networking & Real-Time]]`, `[[Security & Zero-Persistence]]`, `[[Database & Infrastructure]]`) with real-time search and ADR counters.
-- **Right Column (8 Cols):** Active documentation canvas with ADR rationale, code evidence links, and MemPalace immutable verbatim voice transcripts. Eliminates vertical scrolling jumps.
+- **Right Column (8 Cols):** Active documentation canvas with ADR rationale, code evidence links, and immutable verbatim voice transcripts from the raw voice vault. Eliminates vertical scrolling jumps.
 
 ### D. Resume Sync Studio
 - **Left Studio (5 Cols):** Synthesized Google XYZ bullets (*"Accomplished X as measured by Y by doing Z"*) with verified tech tags.

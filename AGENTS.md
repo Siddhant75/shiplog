@@ -68,7 +68,7 @@ Every path listed below reflects the clean public repository on `main`:
 │   ├── portfolio/data.ts           # Bento portfolio dataset, telemetry & radar helpers
 │   ├── resume/engine.ts            # Resume engine: Google XYZ bullets & Julia Evans brag doc
 │   ├── security/scrubber.ts        # Pre-flight secret scrubber & sensitive file filter
-│   ├── storage/engine.ts           # MemPalace + LLM Wiki local storage engine
+│   ├── storage/engine.ts           # Dual-tier dev memory storage engine
 │   └── wiki/data.ts                # Engineering wiki topic hubs & ADR catalog
 └── tests/                          # 20 automated Vitest test suites (96 tests)
 ```
@@ -103,7 +103,7 @@ ShipLog is an autonomous multi-agent system designed to convert voice recaps int
            (lib/resume/engine.ts)   (lib/wiki/data.ts)        (lib/portfolio/data.ts)
            - Google XYZ Bullets     - Bi-directional links    - Linear Bento Grid
            - Julia Evans Brag Doc   - Code-anchored ADRs      - Telemetry & Radar
-           - ATS 95/100 Format      - MemPalace Voice Vault   - Slide-over Case Study
+           - ATS 95/100 Format      - Verbatim Voice Vault   - Slide-over Case Study
 ```
 
 ### Agent Roster & Contracts
@@ -129,7 +129,7 @@ ShipLog is an autonomous multi-agent system designed to convert voice recaps int
 
 5. **Engineering Wiki Compiler Sub-Agent (`lib/wiki/data.ts`)**
    - Maintains bi-directional topic nodes (`[[Networking & Real-Time]]`, `[[Security & Zero-Persistence]]`, `[[Database & Infrastructure]]`).
-   - Pairs architectural decision records (ADRs) with verifiable code evidence links and verbatim MemPalace audio transcripts.
+   - Pairs architectural decision records (ADRs) with verifiable code evidence links and verbatim voice transcripts.
 
 6. **Portfolio Curator Agent (`lib/portfolio/data.ts`)**
    - Aggregates code telemetry metrics (grounding rate, total verified shipments).

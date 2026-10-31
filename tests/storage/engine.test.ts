@@ -3,7 +3,7 @@ import { StorageEngine, ShipLogEntry } from '@/lib/storage/engine';
 import fs from 'fs';
 import path from 'path';
 
-describe('Storage Engine (MemPalace / LLM Wiki)', () => {
+describe('Storage Engine (Dual-Tier Memory)', () => {
   const testDir = path.join(process.cwd(), 'tmp-test-storage');
 
   beforeEach(() => {

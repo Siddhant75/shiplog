@@ -25,7 +25,7 @@ Unlike standard LLM wrappers, ShipLog grounds every generated claim against actu
 - 🛡️ **Anti-Hallucination Code Grounding**: Autonomously inspects git diffs and commit logs. If an LLM hallucinates an unreferenced framework or invented task, ShipLog flags it with visual verification badges and code-level anchors (`socketClient.ts:42`).
 - 🌐 **Living Developer Portfolio (Linear Bento Grid)**: High-density visual portfolio with a flagship hero showcase, code telemetry counters, technology stack distribution radar, and filterable project gallery.
 - 📖 **Slide-Over Architectural Case Study Drawer**: Explore deep-dive architectural trade-offs, quantified business impact, and syntax-highlighted git diffs with 1-click Markdown export.
-- 🧠 **Engineering Wiki Vault (Obsidian Split-Pane)**: Split-pane knowledge management with bi-directional wikilinks (`[[Topic]]`), instant zero-scroll topic hub switching, and MemPalace verbatim voice transcripts.
+- 🧠 **Engineering Wiki Vault (Obsidian Split-Pane)**: Split-pane knowledge management with bi-directional wikilinks (`[[Topic]]`), instant zero-scroll topic hub switching, and immutable verbatim voice transcripts.
 - 📄 **Resume Sync Studio**: Sub-agent that compiles impact-driven Google XYZ bullets (*"Accomplished [X] as measured by [Y] by doing [Z]"*), ATS-optimized resume revisions (95/100 score), and Julia Evans Quarterly Brag Documents for engineering review cycles.
 - 🔒 **5-Pillar Zero-Persistence Security**: Stateless in-memory proxy architecture ensures credentials and API keys are never written to disk, database, or server logs. Pre-flight secret scrubber strips tokens before model ingestion.
 - 🔌 **Universal Model Support**: 100% air-gapped local inference via **Ollama** (`llama3.2`) out of the box, with Bring-Your-Own-Key (BYOK) support for **Google Gemini**, **OpenAI**, and **Anthropic Claude**.
@@ -91,8 +91,8 @@ flowchart TD
 
     subgraph SubAgents["Specialized Sub-Agents & Knowledge Tiers"]
         RESUME_AGENT["📄 Resume Synthesizer (Google XYZ + ATS 95 + Julia Evans)"]
-        WIKI_TIER["📚 LLM Wiki Topic Compiler (Bi-directional Links)"]
-        MEM_PALACE["🎙️ MemPalace Immutable Verbatim Voice Vault"]
+        WIKI_TIER["📚 Wiki Knowledge Compiler (Bi-directional Links)"]
+        VOICE_VAULT["🎙️ Immutable Verbatim Voice Vault"]
     end
 
     V --> SCRUB
@@ -102,10 +102,10 @@ flowchart TD
     LLM --> GROUND
     GROUND --> RESUME_AGENT
     GROUND --> WIKI_TIER
-    GROUND --> MEM_PALACE
+    GROUND --> VOICE_VAULT
     RESUME_AGENT --> V4
     WIKI_TIER --> V3
-    MEM_PALACE --> V3
+    VOICE_VAULT --> V3
     GROUND --> V2
     GROUND --> V1
 ```
@@ -180,7 +180,7 @@ A modern, high-density Bento Grid showcasing:
 ### 3. 🧠 Engineering Wiki Vault (Obsidian / GitBook Split-Pane)
 Solves documentation fragmentation with a zero-scroll dual-pane workspace:
 - **Left Column (4 Cols):** Topic knowledge hubs (`[[Networking & Real-Time]]`, `[[Security & Zero-Persistence]]`, `[[Database & Infrastructure]]`) with real-time search and ADR badges.
-- **Right Column (8 Cols):** Active documentation canvas with architectural decisions, code evidence links, and immutable verbatim voice transcripts from the MemPalace vault.
+- **Right Column (8 Cols):** Active documentation canvas with architectural decisions, code evidence links, and immutable verbatim voice transcripts from the raw voice vault.
 
 ### 4. 📄 Resume Sync Sub-Agent & Studio
 A dedicated split-screen career engine:
@@ -205,23 +205,23 @@ Developer codebases and credentials demand uncompromising security:
 
 ---
 
-## 🧠 Memory Architecture: MemPalace + LLM Wiki
+## 🧠 Dual-Tier Chronological Dev Memory: Verbatim Voice Vault + Structured Living Index
 
 Traditional vector embeddings frequently fail for chronological developer logs because embeddings blur chronological sequences and lose verbatim nuance. ShipLog implements an open-source dual-tier persistence pattern:
 
 ```text
 data/
-├── raw/                      # MemPalace: Verbatim raw speech transcripts
+├── raw/                      # Tier 1: Verbatim raw speech transcripts (exact context)
 │   ├── shiplog-1718001.txt
 │   └── shiplog-1718002.txt
-├── entries/                  # LLM Wiki: Structured, validated JSON artifacts
+├── entries/                  # Tier 2: Structured, validated JSON deliverables & ADRs
 │   ├── shiplog-1718001.json
 │   └── shiplog-1718002.json
 └── index.json                # Living Index: Searchable chronological metadata catalog
 ```
 
-- **Tier 1: MemPalace Verbatim Raw Storage**: Retains exact, unedited transcripts of developer speech in `data/raw/`. When questions arise months later, the original stream-of-consciousness context remains untainted.
-- **Tier 2: LLM Wiki Structured JSON & Living Index**: Extracts verified structured entities (title, impact, tech stack, code evidence) into `data/entries/` and a central `data/index.json` catalog for instantaneous rendering, chronological timeline navigation, and keyword searches.
+- **Tier 1: Immutable Verbatim Voice Vault**: Retains exact, unedited transcripts of developer speech in `data/raw/`. When questions arise months later, the original stream-of-consciousness context remains untainted.
+- **Tier 2: Structured Knowledge Graph & Living Index**: Extracts verified structured entities (title, impact, tech stack, code evidence) into `data/entries/` and a central `data/index.json` catalog for instantaneous rendering, chronological timeline navigation, and keyword searches.
 
 ---
 
@@ -402,7 +402,7 @@ npx tsc --noEmit
 │   ├── portfolio/data.ts           # Bento portfolio dataset, telemetry & radar helpers
 │   ├── resume/engine.ts            # Resume engine: Google XYZ bullets & Julia Evans brag doc
 │   ├── security/scrubber.ts        # Pre-flight secret scrubber & sensitive file filter
-│   ├── storage/engine.ts           # MemPalace + LLM Wiki local storage engine
+│   ├── storage/engine.ts           # Dual-tier dev memory storage engine
 │   └── wiki/data.ts                # Engineering wiki topic hubs & ADR catalog
 ├── scripts/
 │   └── record-demo-e2e.mjs         # Headless browser demo recording automation

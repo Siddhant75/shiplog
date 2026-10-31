@@ -67,10 +67,10 @@ export class StorageEngine {
   saveEntry(entry: ShipLogEntry): void {
     const cleanId = sanitizeId(entry.id);
     this.ensureDirs();
-    // 1. Verbatim raw storage (MemPalace pattern)
+    // 1. Verbatim raw storage (Raw Voice Vault)
     fs.writeFileSync(path.join(this.baseDir, 'raw', `${cleanId}.txt`), entry.rawTranscript, 'utf-8');
 
-    // 2. Verified structured entry (LLM Wiki derived knowledge layer)
+    // 2. Verified structured entry (Structured Knowledge Layer)
     fs.writeFileSync(path.join(this.baseDir, 'entries', `${cleanId}.json`), JSON.stringify(entry, null, 2), 'utf-8');
 
     // 3. Update living index

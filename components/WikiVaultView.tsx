@@ -66,7 +66,7 @@ export function WikiVaultView({ topicHubs = WIKI_TOPIC_HUBS, onToast }: WikiVaul
               </span>
               <h2 className="text-xl font-bold text-white tracking-tight">Engineering Wiki Vault</h2>
               <span className="px-2 py-0.5 rounded-full bg-indigo-950 border border-indigo-800 text-[11px] font-mono text-indigo-300">
-                LLM Wiki Pattern
+                Living Knowledge Graph
               </span>
             </div>
             <p className="text-xs text-slate-400">
@@ -172,7 +172,7 @@ export function WikiVaultView({ topicHubs = WIKI_TOPIC_HUBS, onToast }: WikiVaul
           <div className="p-4 rounded-2xl bg-indigo-950/20 border border-indigo-800/30 text-xs text-indigo-300/90 space-y-1.5">
             <div className="flex items-center gap-1.5 font-bold text-indigo-300 text-xs">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>MemPalace & Wiki Architecture</span>
+              <span>Dual-Tier Knowledge Architecture</span>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
               Raw spoken journals are indexed into immutable voice cards, synthesized into validated ADRs, and cross-referenced with bi-directional <code className="text-indigo-300">[[wikilinks]]</code>.
@@ -268,7 +268,7 @@ export function WikiVaultView({ topicHubs = WIKI_TOPIC_HUBS, onToast }: WikiVaul
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400">
                     <Mic className="w-4 h-4" />
-                    <span>Immutable Verbatim Voice Vault (MemPalace Write Tier)</span>
+                    <span>Immutable Verbatim Voice Vault (Raw Audio Tier)</span>
                   </div>
                   <span className="text-[11px] font-mono text-slate-500">
                     Raw Wispr Streams
