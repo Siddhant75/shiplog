@@ -46,5 +46,13 @@ docs/DEMO_SCRIPT.md
 demo-assets/
 *.webm
 *.mp4
+*.wav
+*.mp3
+*.ogg
+*.onnx
+*.bin
+__pycache__/
+*.pyc
+.venv/
 scripts/generate_voiceover.py
 *generate_voiceover*
