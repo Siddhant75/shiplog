@@ -45,3 +45,6 @@ docs/*DEMO_SCRIPT*
 docs/DEMO_SCRIPT.md
 demo-assets/
 *.webm
+*.mp4
+scripts/generate_voiceover.py
+*generate_voiceover*
