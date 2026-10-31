@@ -9,6 +9,7 @@
 [![Security](https://img.shields.io/badge/Security-5--Pillar%20Zero--Persistence-emerald)](#-5-pillar-security-architecture)
 [![Local LLM](https://img.shields.io/badge/Ollama-100%25%20Air--Gapped-orange)](https://ollama.com/)
 [![Architecture](https://img.shields.io/badge/Architecture-Mermaid%20%26%20C4-purple)](docs/architecture.md)
+[![Agent Spec](https://img.shields.io/badge/Agent%20Spec-AGENTS.md-blueviolet)](AGENTS.md)
 
 ShipLog is an open-source, privacy-first developer companion and career engine that transforms a 60-second spoken end-of-day recap into structured, verified engineering deliverables: **Living Bento Developer Portfolio**, **Deep-Dive Architectural Case Studies**, **Obsidian-Style Engineering Wiki Vault**, and **Automated ATS Resume Sync with Julia Evans Brag Documents**.
 
@@ -373,6 +374,7 @@ npx tsc --noEmit
 
 ```text
 .
+├── AGENTS.md                       # Autonomous coding agent specifications & multi-agent runtime
 ├── app/
 │   ├── api/agent/run/route.ts      # Stateless zero-persistence API route
 │   ├── globals.css                 # Tailwind directives & design system styling
@@ -473,3 +475,4 @@ Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
 - **Hackathon**: Developed for the **WeMakeDevs & Wispr Flow Hackathon** (Track 1: Builders).
 - Built with voice-driven development powered by [Wispr Flow](https://flow.wispr.ai).
 - Special thanks to the [WeMakeDevs](https://wemakedevs.org) community.
+
